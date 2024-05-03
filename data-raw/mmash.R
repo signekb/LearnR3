@@ -7,9 +7,9 @@ mmash_link <- r3::mmash_data_link
 
 # Unzip
 unzip(
-    here("data-raw/mmash-data.zip"),
-    exdir = here("data-raw"),
-    junkpaths = TRUE # extract everything in the folder
+  here("data-raw/mmash-data.zip"),
+  exdir = here("data-raw"),
+  junkpaths = TRUE # extract everything in the folder
 )
 Sys.sleep(1)
 unzip(here("data-raw/MMASH.zip"), exdir = here("data-raw"))
@@ -17,8 +17,8 @@ unzip(here("data-raw/MMASH.zip"), exdir = here("data-raw"))
 # Remove/tidy up left over files
 library(fs)
 file_delete(here(c(
-    "data-raw/MMASH.zip",
-    "data-raw/SHA256SUMS.txt",
-    "data-raw/LICENSE.txt"
+  "data-raw/MMASH.zip",
+  "data-raw/SHA256SUMS.txt",
+  "data-raw/LICENSE.txt"
 )))
 file_move(here("data-raw/DataPaper"), here("data-raw/mmash"))
