@@ -23,4 +23,10 @@ user_info_df <- map(user_info_files, import_user_info) |> list_rbind(names_to = 
 
 ```
 
+## Exercise: Map on the other datasets
+
+```{r}
+import_multiple_files("saliva.csv", import_saliva)
+
+```
 
