@@ -1,4 +1,7 @@
 library(here)
+library(fs)
+library(tidyverse)
+source(here("R/functions.R"))
 
 # Download
 # mmash_link <- "https://physionet.org/static/published-projects/mmash/multilevel-monitoring-of-activity-and-sleep-in-healthy-people-1.0.0.zip"
@@ -15,7 +18,7 @@ Sys.sleep(1)
 unzip(here("data-raw/MMASH.zip"), exdir = here("data-raw"))
 
 # Remove/tidy up left over files
-library(fs)
+
 file_delete(here(c(
   "data-raw/MMASH.zip",
   "data-raw/SHA256SUMS.txt",
