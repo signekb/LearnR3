@@ -4,7 +4,7 @@ author: "Your Name"
 format: html
 ---
 
-## Header 1
+## Setup
 
 ```{r setup}
 library(tidyverse)
@@ -15,7 +15,7 @@ source(here("R/functions.R"))
 
 ## Importing raw data
 
-```{r}
+```{r user_info_file}
 user_1_info_file <- here("data-raw/mmash/user_1/user_info.csv")
 user_1_info_data <- read_csv(
   user_1_info_file,
@@ -34,7 +34,7 @@ user_1_info_data <- read_csv(
 
 ## Exercise: Import the saliva data
 
-```{r}
+```{r saliva_file}
 user_1_saliva_file <- here("data-raw/mmash/user_1/saliva.csv")
 user_1_saliva_data_prep <- read_csv(
   user_1_saliva_file,
@@ -59,7 +59,7 @@ user_1_saliva_data <- read_csv(
 
 ## Import larger datasets 
 
-```{r}
+```{r rr_file}
 user_1_rr_file <- here("data-raw/mmash/user_1/RR.csv")
 user_1_rr_data_prep <- read_csv(
   user_1_rr_file,
@@ -81,11 +81,16 @@ user_1_rr_data <- read_csv(
   ),
   name_repair = snakecase::to_snake_case
 )
+
+# RR function moved to R/functions.R
+
+# Test that function works
+import_rr(here::here("data-raw/mmash/user_3/RR.csv"))
 ```
 
 ## Exercise: Import the Actigraph data
 
-```{r}
+```{r actigraph_file}
 user_1_actigraph_file <- here("data-raw/mmash/user_1/Actigraph.csv")
 user_1_actigraph_data_prep <- read_csv(
   user_1_actigraph_file,
@@ -115,6 +120,14 @@ user_1_actigraph_data <- read_csv(
   ),
   name_repair = snakecase::to_snake_case
 )
+
+# actigraph function moved to R/functions.R
+
+# Test that function works
+import_actigraph(here::here("data-raw/mmash/user_3/Actigraph.csv"))
+
+
+
 ```
 
 ## Making a function 
@@ -138,35 +151,29 @@ add_numbers(1, 2)
 ## Import the user data with a function
 
 ```{r}
+# user info file function has been moved to R/functions.R
 # user 1
-import_user_info(here("data-raw/mmash/user_1/user_info.csv"))
+import_user_info(here::here("data-raw/mmash/user_1/user_info.csv"))
 
 # user 2
-import_user_info(here("data-raw/mmash/user_2/user_info.csv"))
+import_user_info(here::here("data-raw/mmash/user_2/user_info.csv"))
 ```
 
 ## Exercise for importing the saliva data as a function
 
 ```{r}
-#' Import MMASH saliva data file.
-#'
-#' @param file_path Path to saliva data file.
-#'
-#' @return Outputs a data frame/tibble.
-#'
-import_saliva <- function(file_path) {
-saliva_data <- read_csv(
-    file_path,
-    col_select = -1,
-    col_types = cols(
-        samples = col_character(),
-        cortisol_norm = col_double(),
-        melatonin_norm = col_double()  
-    ), 
-    name_repair = snakecase::to_snake_case
-)
-return(saliva_data)
-}
+# saliva function moved to R/functions.R
+
+# Test that this works
+import_saliva(here::here("data-raw/mmash/user_1/saliva.csv"))
 ```
 
+# Exercise 6.6: Move and update the rest of the functions
 
+```{r}
+# Check that they work
+import_user_info(here::here("data-raw/mmash/user_2/user_info.csv"))
+import_saliva(here::here("data-raw/mmash/user_1/saliva.csv"))
+import_rr(here::here("data-raw/mmash/user_1/RR.csv"))
+import_actigraph(here::here("data-raw/mmash/user_1/Actigraph.csv"))
+```
