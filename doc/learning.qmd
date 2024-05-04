@@ -9,171 +9,18 @@ format: html
 ```{r setup}
 library(tidyverse)
 library(here)
+library(fs)
 
 source(here("R/functions.R"))
 ```
 
-## Importing raw data
-
-```{r user_info_file}
-user_1_info_file <- here("data-raw/mmash/user_1/user_info.csv")
-user_1_info_data <- read_csv(
-  user_1_info_file,
-  col_select = -1,
-  col_types = cols(
-    col_skip(),
-    gender = col_character(),
-    weight = col_double(),
-    height = col_double(),
-    age = col_double(),
-    .delim = ","
-  ),
-  name_repair = snakecase::to_snake_case
-)
-```
-
-## Exercise: Import the saliva data
-
-```{r saliva_file}
-user_1_saliva_file <- here("data-raw/mmash/user_1/saliva.csv")
-user_1_saliva_data_prep <- read_csv(
-  user_1_saliva_file,
-  col_select = -1,
-  name_repair = snakecase::to_snake_case
-)
-spec(user_1_saliva_data_prep)
-
-user_1_saliva_data <- read_csv(
-  user_1_saliva_file,
-  col_select = -1,
-  col_types = cols(
-    col_skip(),
-    samples = col_character(),
-    cortisol_norm = col_double(),
-    melatonin_norm = col_double()
-  ),
-  name_repair = snakecase::to_snake_case
-)
-```
-
-
-## Import larger datasets 
-
-```{r rr_file}
-user_1_rr_file <- here("data-raw/mmash/user_1/RR.csv")
-user_1_rr_data_prep <- read_csv(
-  user_1_rr_file,
-  n_max = 100,
-  col_select = -1,
-  name_repair = snakecase::to_snake_case
-)
-spec(user_1_rr_data_prep)
-
-user_1_rr_data <- read_csv(
-  user_1_rr_file,
-  col_select = -1,
-  col_types = cols(
-    col_skip(),
-    ibi_s = col_double(),
-    day = col_double(),
-    # Converts to seconds
-    time = col_time(format = "")
-  ),
-  name_repair = snakecase::to_snake_case
-)
-
-# RR function moved to R/functions.R
-
-# Test that function works
-import_rr(here::here("data-raw/mmash/user_3/RR.csv"))
-```
-
-## Exercise: Import the Actigraph data
-
-```{r actigraph_file}
-user_1_actigraph_file <- here("data-raw/mmash/user_1/Actigraph.csv")
-user_1_actigraph_data_prep <- read_csv(
-  user_1_actigraph_file,
-  n_max = 100,
-  col_select = -1,
-  name_repair = snakecase::to_snake_case
-)
-spec(user_1_actigraph_data_prep)
-
-user_1_actigraph_data <- read_csv(
-  user_1_actigraph_file,
-  col_select = -1,
-  col_types = cols(
-    col_skip(),
-    axis_1 = col_double(),
-    axis_2 = col_double(),
-    axis_3 = col_double(),
-    steps = col_double(),
-    hr = col_double(),
-    inclinometer_off = col_double(),
-    inclinometer_standing = col_double(),
-    inclinometer_sitting = col_double(),
-    inclinometer_lying = col_double(),
-    vector_magnitude = col_double(),
-    day = col_double(),
-    time = col_time(format = "")
-  ),
-  name_repair = snakecase::to_snake_case
-)
-
-# actigraph function moved to R/functions.R
-
-# Test that function works
-import_actigraph(here::here("data-raw/mmash/user_3/Actigraph.csv"))
-
-
-
-```
-
-## Making a function 
+## Using map 
 
 ```{r}
-#' Add two numbers together.
-#'
-#' @param num1 A number here.
-#' @param num2 A number here.
-#'
-#' @return Returns the sum of the two numbers.
-#'
-add_numbers <- function(num1, num2) {
-  added <- num1 + num2
-  return(added)
-}
+user_info_files <- dir_ls(here("data-raw/mmash/"), regexp = "user_info.csv", recurse = TRUE)
 
-add_numbers(1, 2)
+user_info_df <- map(user_info_files, import_user_info) |> list_rbind(names_to = "file_path_id")
+
 ```
 
-## Import the user data with a function
 
-```{r}
-# user info file function has been moved to R/functions.R
-# user 1
-import_user_info(here::here("data-raw/mmash/user_1/user_info.csv"))
-
-# user 2
-import_user_info(here::here("data-raw/mmash/user_2/user_info.csv"))
-```
-
-## Exercise for importing the saliva data as a function
-
-```{r}
-# saliva function moved to R/functions.R
-
-# Test that this works
-import_saliva(here::here("data-raw/mmash/user_1/saliva.csv"))
-```
-
-# Exercise 6.6: Move and update the rest of the functions
-
-```{r}
-# Check that they work
-import_user_info(here::here("data-raw/mmash/user_2/user_info.csv"))
-import_saliva(here::here("data-raw/mmash/user_1/saliva.csv"))
-import_rr(here::here("data-raw/mmash/user_1/RR.csv"))
-import_actigraph(here::here("data-raw/mmash/user_1/Actigraph.csv"))
-```
