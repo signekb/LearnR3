@@ -14,30 +14,3 @@ library(fs)
 source(here("R/functions.R"))
 options(dplyr.summarise.inform = FALSE)
 ```
-
-```{r}
-user_info_df <- import_multiple_files("user_info.csv", import_user_info)
-saliva_df <- import_multiple_files("saliva.csv", import_saliva)
-```
-
-```{r}
-user_info_df |> select(where(is.character))
-
-saliva_df |> summarise(cortisol_mean = mean(cortisol_norm), melatonin_mean = mean(melatonin_norm))
-```
-
-```{r}
-saliva_df |> summarise(across(where(is.numeric), list(mean = mean, sd = sd)))
-```
-
-```{r}
-rr_df <- import_multiple_files("RR.csv", import_rr)
-summarised_rr_df <- rr_df |>
-  group_by(file_path_id, day) |>
-  summarise(across(ibi_s, list(
-    mean = \(x) mean(x, na.rm = TRUE),
-    sd = \(x) sd(x, na.rm = TRUE)
-  ))) |>
-  ungroup()
-summarised_rr_df
-```
